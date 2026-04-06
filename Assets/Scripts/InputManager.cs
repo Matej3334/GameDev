@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
         manager = GetComponent<PlayerMovementManager>();
         look = GetComponent<PlayerLook>();
         onFoot.Jump.performed += ctx => manager.Jump();
+        onFoot.Run.started += ctx => manager.StartRun();
+        onFoot.Run.canceled += ctx => manager.StopRun();
     }
 
     void FixedUpdate()
