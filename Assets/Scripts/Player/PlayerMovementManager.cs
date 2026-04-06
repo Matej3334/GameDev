@@ -18,10 +18,21 @@ public class PlayerMovementManager : MonoBehaviour
     public float jumpHeight = 3f;
     public float gravity = -9.8f;
     private Animator animator;
+    
+    public Transform groundCheck;
+    public float groundDistance = 0.05f;
+    public LayerMask groundMask = 7;
 
     void Awake()
     {
         player = gameObject;
+        if (groundCheck == null)
+        {
+            GameObject groundCheckObj = new GameObject("GroundCheck");
+            groundCheckObj.transform.parent = transform;
+            groundCheckObj.transform.localPosition = new Vector3(0, -0.1f, 0);
+            groundCheck = groundCheckObj.transform;
+        }
     }
     void Start()
     {
@@ -31,15 +42,9 @@ public class PlayerMovementManager : MonoBehaviour
     }
     
 
-    void Update()
-    {
-        isGrounded = characterController.isGrounded; 
-    }
-
     public void ProcessMove(Vector2 input)
     {
 
-        isRunning = staminaController.isRunning;
         playerSpeed = isRunning ? runningSpeed : speed;
 
         Vector3 moveDirection = Vector3.zero;
@@ -52,12 +57,36 @@ public class PlayerMovementManager : MonoBehaviour
         {
             playerVelocity.y = -2f;
         }
-        
-        animator.SetFloat("XVel", input.x);
-        animator.SetFloat("YVel", input.y);
-        animator.SetBool("Wow", true);
-        characterController.Move(playerVelocity * Time.deltaTime);
 
+        if (isRunning)
+        {
+            Debug.Log(input.x * 2 + "    " + input.y * 2);
+            animator.SetFloat("XVel", input.x*2);
+            animator.SetFloat("YVel", input.y*2);
+        }
+        else
+        {
+            animator.SetFloat("XVel", input.x);
+            animator.SetFloat("YVel", input.y);
+        }
+
+            characterController.Move(playerVelocity * Time.deltaTime);
+
+    }
+
+    void Update()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (!isGrounded)
+        {
+            playerVelocity.y += gravity * Time.deltaTime;
+        }
+        else if (playerVelocity.y < 0)
+        {
+            playerVelocity.y = -2f;
+        }
+
+        characterController.Move(playerVelocity * Time.deltaTime);
     }
 
     public void Jump()
@@ -72,12 +101,14 @@ public class PlayerMovementManager : MonoBehaviour
     {
         if (isGrounded && staminaController.CanRun()) 
         {
+            isRunning = true;
             staminaController.SetRun(true);
         }
     }
 
     public void StopRun()
     {
+        isRunning = false;
         staminaController.SetRun(false);
     }
 }

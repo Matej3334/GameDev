@@ -24,6 +24,7 @@ public class StaminaController : MonoBehaviour
 
     void Update()
     {
+        
         if(isRunning && playerStamina > 0)
         {
             playerStamina -= runDrain * Time.deltaTime;
@@ -38,6 +39,11 @@ public class StaminaController : MonoBehaviour
         else if(!isRunning && (playerStamina <= maxStamina - 0.01)){
 
             updateStamina();
+        }
+
+        if(isRunning && playerStamina <= 0)
+        {
+            isRunning = false;
         }
     }
 
