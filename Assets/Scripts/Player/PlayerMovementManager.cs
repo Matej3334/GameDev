@@ -8,18 +8,17 @@ public class PlayerMovementManager : MonoBehaviour
 
     private CharacterController characterController;
     private StaminaController staminaController;
-    private Animator animator;
     private Vector3 playerVelocity;
     public float speed;
     private float playerSpeed;
     public bool isRunning = false;
     public float runningSpeed;
     [HideInInspector] private bool isGrounded;
+
     public float jumpHeight = 3f;
     public float gravity = -9.8f;
-    public bool isWalking = false;
-    
-    private Vector2 currentInput;
+    private Animator animator;
+
     void Awake()
     {
         player = gameObject;
@@ -27,8 +26,8 @@ public class PlayerMovementManager : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
         staminaController = GetComponent<StaminaController>();
+        animator = GetComponent<Animator>();
     }
     
 
@@ -39,7 +38,6 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void ProcessMove(Vector2 input)
     {
-        currentInput = input;
 
         isRunning = staminaController.isRunning;
         playerSpeed = isRunning ? runningSpeed : speed;
@@ -49,21 +47,17 @@ public class PlayerMovementManager : MonoBehaviour
         moveDirection.z = input.y;
         characterController.Move(transform.TransformDirection(moveDirection) * playerSpeed * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
+        
         if(isGrounded && playerVelocity.y < 0)
         {
             playerVelocity.y = -2f;
         }
+        
+        animator.SetFloat("XVel", input.x);
+        animator.SetFloat("YVel", input.y);
+        animator.SetBool("Wow", true);
         characterController.Move(playerVelocity * Time.deltaTime);
 
-        bool walk = currentInput.magnitude > 0.01f;
-        
-        if (isWalking != walk)
-        {
-            isWalking = walk;
-            animator.SetBool("isWalking", walk);
-            animator.SetFloat("speed", currentInput.magnitude);
-        }
-        
     }
 
     public void Jump()
@@ -85,6 +79,5 @@ public class PlayerMovementManager : MonoBehaviour
     public void StopRun()
     {
         staminaController.SetRun(false);
-        animator.SetBool("isRunning", false);
     }
 }

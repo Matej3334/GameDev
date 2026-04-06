@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private PlayerInput.OnFootActions onFoot;
+    public PlayerInput.OnFootActions onFoot;
     private PlayerMovementManager manager;
     private PlayerLook look;
     void Awake()
@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
         onFoot = playerInput.OnFoot;
         manager = GetComponent<PlayerMovementManager>();
         look = GetComponent<PlayerLook>();
+
         onFoot.Jump.performed += ctx => manager.Jump();
         onFoot.Run.started += ctx => manager.StartRun();
         onFoot.Run.canceled += ctx => manager.StopRun();
