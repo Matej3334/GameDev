@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    private Camera camera;
+    [SerializeField] Camera camera;
     [SerializeField] private float distance = 3f;
     [SerializeField] private LayerMask mask;
     private PlayerUI playerUI;
@@ -10,7 +10,6 @@ public class PlayerInteract : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        camera = GetComponent<PlayerLook>().camera;
         playerUI = GetComponent<PlayerUI>();
         inputManager = GetComponent<InputManager>();
     }

@@ -24,7 +24,6 @@ public class StaminaController : MonoBehaviour
 
     void Update()
     {
-        
         if(isRunning && playerStamina > 0)
         {
             playerStamina -= runDrain * Time.deltaTime;
@@ -72,5 +71,10 @@ public class StaminaController : MonoBehaviour
     public bool CanRun()
     {
         return playerStamina > 0;
+    }
+
+    public bool isRun()
+    {
+        return isRunning;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovementManager : MonoBehaviour
 {
     public static GameObject player;
-
+    [SerializeField] private float AnimationBlendSpeed = 8.9f;
     private CharacterController characterController;
     private StaminaController staminaController;
     private Vector3 playerVelocity;
@@ -44,13 +44,14 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void ProcessMove(Vector2 input)
     {
-
+        isRunning = staminaController.isRun();
         playerSpeed = isRunning ? runningSpeed : speed;
 
         Vector3 moveDirection = Vector3.zero;
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
-        characterController.Move(transform.TransformDirection(moveDirection) * playerSpeed * Time.deltaTime);
+        moveDirection.x = Mathf.Lerp(moveDirection.x, input.x * playerSpeed, AnimationBlendSpeed);
+        moveDirection.z = Mathf.Lerp(moveDirection.z, input.y * playerSpeed, AnimationBlendSpeed);
+
+        characterController.Move(transform.TransformDirection(moveDirection) * Time.deltaTime);
         playerVelocity.y += gravity * Time.deltaTime;
         
         if(isGrounded && playerVelocity.y < 0)
@@ -60,14 +61,13 @@ public class PlayerMovementManager : MonoBehaviour
 
         if (isRunning)
         {
-            Debug.Log(input.x * 2 + "    " + input.y * 2);
-            animator.SetFloat("XVel", input.x*2);
-            animator.SetFloat("YVel", input.y*2);
+            animator.SetFloat("XVel", moveDirection.x);
+            animator.SetFloat("YVel", moveDirection.z);
         }
         else
         {
-            animator.SetFloat("XVel", input.x);
-            animator.SetFloat("YVel", input.y);
+            animator.SetFloat("XVel", moveDirection.x);
+            animator.SetFloat("YVel", moveDirection.z);
         }
 
             characterController.Move(playerVelocity * Time.deltaTime);
@@ -83,6 +83,10 @@ public class PlayerMovementManager : MonoBehaviour
         }
         else if (playerVelocity.y < 0)
         {
+            if (animator.GetBool("Jump")==true)
+            {
+                animator.SetBool("Jump", false);
+            }
             playerVelocity.y = -2f;
         }
 
@@ -93,6 +97,7 @@ public class PlayerMovementManager : MonoBehaviour
     {
         if (isGrounded)
         {
+            animator.SetBool("Jump", true);
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
     }
@@ -101,14 +106,13 @@ public class PlayerMovementManager : MonoBehaviour
     {
         if (isGrounded && staminaController.CanRun()) 
         {
-            isRunning = true;
             staminaController.SetRun(true);
         }
     }
 
     public void StopRun()
     {
-        isRunning = false;
         staminaController.SetRun(false);
     }
+
 }
