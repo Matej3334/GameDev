@@ -9,14 +9,17 @@ public class InputManager : MonoBehaviour
     private PlayerLook look;
     void Awake()
     {
+        HideCursor();
         playerInput = new PlayerInput();
         onFoot = playerInput.OnFoot;
         manager = GetComponent<PlayerMovementManager>();
         look = GetComponent<PlayerLook>();
 
+
         onFoot.Jump.performed += ctx => manager.Jump();
         onFoot.Run.started += ctx => manager.StartRun();
         onFoot.Run.canceled += ctx => manager.StopRun();
+        onFoot.Attack.performed += ctx => manager.Attack();
     }
 
     void FixedUpdate()
@@ -35,5 +38,11 @@ public class InputManager : MonoBehaviour
     private void OnDisable()
     {
         onFoot.Disable();
+    }
+
+    private void HideCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
