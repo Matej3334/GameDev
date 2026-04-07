@@ -7,18 +7,21 @@ using UnityEngine.EventSystems;
 public class PlayerMovementManager : MonoBehaviour
 {
     public static GameObject player;
-    [SerializeField] private float AnimationBlendSpeed = 8.9f;
+    [SerializeField] private float AnimationBlendSpeed = 0.2f;
     private CharacterController characterController;
     private StaminaController staminaController;
 
     private Vector3 playerVelocity;
+    private Vector3 currentDirection = Vector3.zero;
     public float speed;
     private float playerSpeed;
     public bool isRunning = false;
     public bool canAttack = true;
     public float runningSpeed;
+    public float crouchSpeed = 2.5f;
     [HideInInspector] private bool isGrounded;
     private float noMove = 0f;
+    private bool isCrouched = false;
 
     public float jumpHeight = 3f;
     public float gravity = -9.8f;
@@ -51,14 +54,20 @@ public class PlayerMovementManager : MonoBehaviour
     {
         if (noMove < 0)
         {
-            isRunning = staminaController.isRun();
-            playerSpeed = isRunning ? runningSpeed : speed;
+            if (!isCrouched)
+            {
+                isRunning = staminaController.isRun();
+                playerSpeed = isRunning ? runningSpeed : speed;
+            }
+            else
+            {
+                playerSpeed = crouchSpeed;
+            }
 
-            Vector3 moveDirection = Vector3.zero;
-            moveDirection.x = Mathf.Lerp(moveDirection.x, input.x * playerSpeed, AnimationBlendSpeed);
-            moveDirection.z = Mathf.Lerp(moveDirection.z, input.y * playerSpeed, AnimationBlendSpeed);
+            currentDirection.x = Mathf.Lerp(currentDirection.x, input.x * playerSpeed, AnimationBlendSpeed * Time.deltaTime);
+            currentDirection.z = Mathf.Lerp(currentDirection.z, input.y * playerSpeed, AnimationBlendSpeed * Time.deltaTime);
 
-            characterController.Move(transform.TransformDirection(moveDirection) * Time.deltaTime);
+            characterController.Move(transform.TransformDirection(currentDirection) * Time.deltaTime);
             playerVelocity.y += gravity * Time.deltaTime;
 
             if (isGrounded && playerVelocity.y < 0)
@@ -66,16 +75,10 @@ public class PlayerMovementManager : MonoBehaviour
                 playerVelocity.y = -2f;
             }
 
-            if (isRunning)
-            {
-                animator.SetFloat("XVel", moveDirection.x);
-                animator.SetFloat("YVel", moveDirection.z);
-            }
-            else
-            {
-                animator.SetFloat("XVel", moveDirection.x);
-                animator.SetFloat("YVel", moveDirection.z);
-            }
+            
+             animator.SetFloat("XVel", currentDirection.x);
+             animator.SetFloat("YVel", currentDirection.z);
+            
 
             characterController.Move(playerVelocity * Time.deltaTime);
         }
@@ -111,7 +114,7 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void Jump()
     {
-        if (isGrounded)
+        if (isGrounded && !isCrouched)
         {
             animator.SetBool("Jump", true);
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
@@ -122,7 +125,7 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void StartRun()
     {
-        if (isGrounded && staminaController.CanRun()) 
+        if (isGrounded && staminaController.CanRun() && !isCrouched) 
         {
             staminaController.SetRun(true);
         }
@@ -135,11 +138,25 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void Attack()
     {
-        if (isGrounded && canAttack && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Attack"))
+        if (isGrounded && canAttack && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Attack") && !isCrouched)
         {
             animator.SetTrigger("Attack");
             canAttack = false;
             noMove = 1.5f;
+        }
+    }
+
+    public void Crouch()
+    {
+        if (!isCrouched)
+        {
+            isCrouched = true;
+            animator.SetBool("Crouch", true);
+        }
+        else
+        {
+            isCrouched = false;
+            animator.SetBool("Crouch", false);
         }
     }
 

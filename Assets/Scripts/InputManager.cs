@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
         onFoot.Run.started += ctx => manager.StartRun();
         onFoot.Run.canceled += ctx => manager.StopRun();
         onFoot.Attack.performed += ctx => manager.Attack();
+        onFoot.Crouch.performed += ctx => manager.Crouch();
     }
 
     void FixedUpdate()
