@@ -17,8 +17,10 @@ public class PlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        Camera currentCamera = Camera.main;
         playerUI.UpdateText(string.Empty);
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        Ray ray = new Ray(currentCamera.transform.position, currentCamera.transform.forward);
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit, distance, mask))
         {
