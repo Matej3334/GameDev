@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,9 +45,9 @@ public class PlayerMovementManager : MonoBehaviour
     }
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
         staminaController = GetComponent<StaminaController>();
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
     }
     
 
@@ -104,8 +105,8 @@ public class PlayerMovementManager : MonoBehaviour
             {
                 animator.SetBool("Jump", false);
             }
-            playerVelocity.y = -2f;
 
+            playerVelocity.y = -2f;
             canAttack = true;
         }
 
@@ -120,9 +121,18 @@ public class PlayerMovementManager : MonoBehaviour
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
             isGrounded = false;
             canAttack = false;
+            characterController.center = new Vector3(0, 1.3f, 0);
+            characterController.height = 2.6f;
+            StartCoroutine(SizeCoroutine());
         }
     }
 
+    IEnumerator SizeCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        characterController.center = new Vector3(0, 1f, 0);
+        characterController.height = 2f;
+    }
     public void StartRun()
     {
         if (isGrounded && staminaController.CanRun() && !isCrouched) 
@@ -152,11 +162,15 @@ public class PlayerMovementManager : MonoBehaviour
         {
             isCrouched = true;
             animator.SetBool("Crouch", true);
+            characterController.center = new Vector3(0, 0.6f, 0);
+            characterController.height = 1.2f;
         }
         else
         {
             isCrouched = false;
             animator.SetBool("Crouch", false);
+            characterController.height = 2f;
+            characterController.center = new Vector3(0, 1f, 0);
         }
     }
 
