@@ -2,7 +2,7 @@
 - Project name: GameDev
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: NavMesh Surface
+  - Name: Door_A
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Interactable
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
