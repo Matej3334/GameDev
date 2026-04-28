@@ -23,6 +23,8 @@ public class PlayerMovementManager : MonoBehaviour
     [HideInInspector] private bool isGrounded;
     private float noMove = 0f;
     private bool isCrouched = false;
+    private float JumpDelay = 10f;
+    private float JumpCooldown;
 
     public float jumpHeight = 3f;
     public float gravity = -9.8f;
@@ -89,6 +91,10 @@ public class PlayerMovementManager : MonoBehaviour
             animator.SetFloat("XVel", 0);
             animator.SetFloat("YVel", 0);
         }
+        if (JumpCooldown > 0)
+        {
+            JumpCooldown -= 5.0f * Time.deltaTime;
+        }
     }
 
     void Update()
@@ -115,8 +121,10 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void Jump()
     {
-        if (isGrounded && !isCrouched)
+        if (isGrounded && !isCrouched && staminaController.CanJump() && JumpCooldown<=0)
         {
+            JumpCooldown = JumpDelay;
+            staminaController.SetJump();
             animator.SetBool("Jump", true);
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
             isGrounded = false;
@@ -129,10 +137,11 @@ public class PlayerMovementManager : MonoBehaviour
 
     IEnumerator SizeCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.2f);
         characterController.center = new Vector3(0, 1f, 0);
         characterController.height = 2f;
     }
+
     public void StartRun()
     {
         if (isGrounded && staminaController.CanRun() && !isCrouched) 

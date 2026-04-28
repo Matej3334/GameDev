@@ -19,6 +19,7 @@ public class WeaponPickUp : Interact
     protected override void Interacts()
     {
         base.Interacts();
+
         Destroy(gameObject);
     }
 

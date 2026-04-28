@@ -7,13 +7,14 @@ public class StaminaController : MonoBehaviour
 {
     public float playerStamina = 100.0f;
     [SerializeField] private float maxStamina = 100.0f;
-    [SerializeField] private float attackCost = 10;
-    [SerializeField] private float jumpCost = 20;
+    [SerializeField] private float attackCost = 10f;
+    [SerializeField] private float jumpCost = 30f;
     [HideInInspector] public bool isRunning = false;
+    [HideInInspector] public bool Jump = false;
 
-    [SerializeField] private float runDrain = 10.0f;
-    [SerializeField] private float staminaRegen = 15.0f;
-    [SerializeField] private float regenDelay = 1.0f;
+    [SerializeField] private float runDrain = 20.0f;
+    [SerializeField] private float staminaRegen = 25.0f;
+    [SerializeField] private float regenDelay = 10.0f;
 
     private float regenerationTimer = 0f;
 
@@ -24,6 +25,7 @@ public class StaminaController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("Jump:" + Jump + " Stamina" + playerStamina);
         if(isRunning && playerStamina > 0)
         {
             playerStamina -= runDrain * Time.deltaTime;
@@ -40,7 +42,12 @@ public class StaminaController : MonoBehaviour
             updateStamina();
         }
 
-        if(isRunning && playerStamina <= 0)
+        if (Jump)
+        {
+            playerStamina -= jumpCost;
+            Jump = false;
+        }
+        if (isRunning && playerStamina <= 0)
         {
             isRunning = false;
         }
@@ -77,4 +84,15 @@ public class StaminaController : MonoBehaviour
     {
         return isRunning;
     }
+
+    public bool CanJump()
+    {
+        return playerStamina > jumpCost;
+    }
+
+    public void SetJump()
+    {
+        Jump = true;
+    }
+
 }

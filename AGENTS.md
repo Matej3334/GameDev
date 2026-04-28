@@ -2,7 +2,7 @@
 - Project name: GameDev
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: Sewer_Tunnel_A
-  - Tag: Untagged
-  - Layer: Default
+  - Name: Main Camera
+  - Tag: MainCamera
+  - Layer: Camera
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
