@@ -1,21 +1,24 @@
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using System.Collections;
 
 
 public class StaminaController : MonoBehaviour
 {
     public float playerStamina = 100.0f;
     [SerializeField] private float maxStamina = 100.0f;
-    [SerializeField] private float attackCost = 10f;
+    [SerializeField] private float attackCost = 40f;
     [SerializeField] private float jumpCost = 30f;
     [HideInInspector] public bool isRunning = false;
     [HideInInspector] public bool Jump = false;
 
-    [SerializeField] private float runDrain = 20.0f;
-    [SerializeField] private float staminaRegen = 25.0f;
-    [SerializeField] private float regenDelay = 10.0f;
+    [SerializeField] private float runDrain = 10.0f;
+    [SerializeField] private float staminaRegen = 10.0f;
+    [SerializeField] private float regenDelay = 2.0f;
 
+    private bool Attack = false;
+    private bool Action = false;
     private float regenerationTimer = 0f;
 
     void Start()
@@ -25,7 +28,7 @@ public class StaminaController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Jump:" + Jump + " Stamina" + playerStamina);
+
         if(isRunning && playerStamina > 0)
         {
             playerStamina -= runDrain * Time.deltaTime;
@@ -38,21 +41,42 @@ public class StaminaController : MonoBehaviour
             }
         }
         else if(!isRunning && (playerStamina <= maxStamina - 0.01)){
-
-            updateStamina();
+            if (!Action)
+            {
+                updateStamina();
+            }
+            else
+            {
+                StartCoroutine(ActionCoroutine());
+            }
         }
+
+
 
         if (Jump)
         {
             playerStamina -= jumpCost;
             Jump = false;
         }
+
+        else if(Attack){
+
+            playerStamina -= attackCost;
+            Attack = false;
+        }
+
         if (isRunning && playerStamina <= 0)
         {
             isRunning = false;
         }
     }
 
+    IEnumerator ActionCoroutine()
+    {
+        yield return new WaitForSeconds(0.8f);
+        Action = false;
+
+    }
     private void updateStamina()
     {
         regenerationTimer += Time.deltaTime;
@@ -93,6 +117,17 @@ public class StaminaController : MonoBehaviour
     public void SetJump()
     {
         Jump = true;
+        Action = true;
     }
 
+    public void SetAttack()
+    {
+        Attack = true;
+        Action = true;
+    }
+
+    public bool canAttack()
+    {
+        return playerStamina > attackCost;
+    }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.ComponentModel.Design;
 using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -33,6 +34,12 @@ public class PlayerMovementManager : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.05f;
     public LayerMask groundMask = 7;
+
+    private int ActiveWeapon = 0;
+    [SerializeField] private Transform WeaponSpawn;
+    private GameObject currentWeapon = null;
+    private WeaponAttack weaponAttack = null;
+    private int WeaponDurability;
 
     void Awake()
     {
@@ -157,11 +164,23 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void Attack()
     {
-        if (isGrounded && canAttack && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Attack") && !isCrouched)
+
+        if (isGrounded && canAttack && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Attack") && !isCrouched && staminaController.canAttack() && ActiveWeapon != 0)
         {
-            animator.SetTrigger("Attack");
-            canAttack = false;
-            noMove = 1.5f;
+            WeaponDurability = weaponAttack.Attack();
+            if (WeaponDurability <= 0)
+            {
+                Destroy(currentWeapon);
+                currentWeapon = null;
+                ActiveWeapon = 0;
+                animator.SetTrigger("Break");
+            }
+            else {
+                animator.SetTrigger("Attack");
+                staminaController.SetAttack();
+                canAttack = false;
+                noMove = 1.5f;
+            }
         }
     }
 
@@ -181,6 +200,17 @@ public class PlayerMovementManager : MonoBehaviour
             characterController.height = 2f;
             characterController.center = new Vector3(0, 1f, 0);
         }
+    }
+
+    public void SetWeapon(GameObject weapon, int num)
+    {
+        if (ActiveWeapon != 0)
+        {
+            Destroy(currentWeapon);
+        }
+        ActiveWeapon = num;
+        currentWeapon=Instantiate(weapon, WeaponSpawn);
+        weaponAttack = currentWeapon.GetComponent<WeaponAttack>();
     }
 
 }

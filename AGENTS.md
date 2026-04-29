@@ -2,7 +2,7 @@
 - Project name: GameDev
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: Main Camera
-  - Tag: MainCamera
-  - Layer: Camera
+  - Name: Dagger
+  - Tag: Untagged
+  - Layer: Interactable
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
