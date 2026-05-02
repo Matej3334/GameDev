@@ -1,14 +1,25 @@
+using System;
+using System.Collections;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 public class EnemyController : MonoBehaviour
 {
     public float lookRadius = 10f;
     private Transform target;
-    NavMeshAgent agent;
-
+    private NavMeshAgent agent;
+    private Animator EnemyAnim;
+    private bool isAttacking = false;
+    [SerializeField] private LayerMask mask;
+    private bool DoorOpened = false;
+    [SerializeField] private EnemyAttack enemyAttack;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        EnemyAnim = GetComponent<Animator>();
+
 
         if (agent == null)
         {
@@ -32,26 +43,81 @@ public class EnemyController : MonoBehaviour
 
         if (distance < lookRadius)
         {
-            agent.SetDestination(target.position);
-
-            if(distance <= agent.stoppingDistance)
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+            if (agent.enabled)
             {
-                //Attack
-                FaceTarget();
+                agent.isStopped = false;
+                
+                if (distance <= agent.stoppingDistance && !isAttacking)
+                {
+                    enemyAttack.Attack();
+                    isAttacking = true;
+                    FaceTarget();
+                    EnemyAnim.SetTrigger("attack");
+                    StartCoroutine(AttackCoroutine());
+
+                }
+                else if (path.status == NavMeshPathStatus.PathPartial)
+                {
+                    agent.SetPath(path);
+                    Ray ray = new Ray(transform.position, transform.forward);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, 4f, mask))
+                    {
+                        if (hit.collider.GetComponent<Interact>() != null &&  !DoorOpened)
+                        {
+                            //agent.SetDestination(hit.collider.transform.position)
+
+                            Interact interactable = hit.collider.GetComponent<Interact>();
+                            interactable.BaseInteract();
+                            DoorOpened = true;
+
+                        }
+                    }
+                }
+                else if (!isAttacking)
+                {
+                    DoorOpened=false;
+                    NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+                    agent.SetPath(path);
+                    EnemyAnim.SetBool("walk", true);
+                }
+            }
+        }
+        else
+        {
+            if(agent.enabled){
+                agent.isStopped = true;
+                EnemyAnim.SetBool("walk", false);
             }
         }
     }
 
     void FaceTarget()
     {
-        Vector3 direction = (transform.position - target.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        transform.LookAt(target.transform);
+        //Vector3 direction = (transform.position - target.position).normalized;
+        //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lookRadius); 
+        Gizmos.DrawWireSphere(transform.position, lookRadius);
+    }
+
+    public void AttackOver()
+    {
+        Debug.Log("Attack Over");
+        isAttacking=false;
+    }
+
+
+    IEnumerator AttackCoroutine()
+    {
+        yield return new WaitForSeconds(2.5f);
+        isAttacking = false;
     }
 }

@@ -24053,8 +24053,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 496326}
-  - component: {fileID: 11196424}
-  - component: {fileID: 13596424}
   - component: {fileID: 5496424}
   - component: {fileID: 114000012851641798}
   m_Layer: 0
@@ -24086,49 +24084,6 @@ Transform:
   - {fileID: 441178}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &11196424
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 196320}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: e5435d9171c843340be4ef907331af82, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: e5435d9171c843340be4ef907331af82, type: 2}
-  - {fileID: 7400000, guid: b2225efc3034ded45b5696fda2d17e72, type: 2}
-  - {fileID: 7400000, guid: 884609fd3666a0c41a93828ebcad2473, type: 2}
-  - {fileID: 7400000, guid: e4630a64c5865994e9f55f15f8ad842c, type: 2}
-  - {fileID: 7400000, guid: c4a4521005b9bf040aaf2e7e14cca926, type: 2}
-  - {fileID: 7400000, guid: b18c849c68979bf42b45595a4ed97a73, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
---- !u!135 &13596424
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 196320}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 10
-  m_Center: {x: 0, y: 10, z: -1.2071486}
 --- !u!54 &5496424
 Rigidbody:
   m_ObjectHideFlags: 0

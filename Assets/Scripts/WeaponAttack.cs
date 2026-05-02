@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class WeaponAttack : MonoBehaviour
 {
-    [SerializeField] int damage = 10;
+    [SerializeField] int damage = 50;
     [SerializeField] int durabilityPerHit = 100;
     [SerializeField] int maxDurability = 100;
-    private BoxCollider collider;
+    private new BoxCollider collider;
     private int currentDurability;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,7 +26,7 @@ public class WeaponAttack : MonoBehaviour
     public int Attack()
     {
         Debug.Log("Attacking");
-        currentDurability -= durabilityPerHit;
+
         if (!(currentDurability <= 0))
         {
             collider.enabled = true;
@@ -44,10 +45,15 @@ public class WeaponAttack : MonoBehaviour
     {
         if (collider.enabled)
         {
-            if (collider.gameObject.CompareTag("Enemy"))
+            GameObject hitObject = collider.gameObject;
+            if (hitObject.CompareTag("Enemy"))
             {
+                EnemyHealth enemy = hitObject.GetComponentInParent<EnemyHealth>();
+                enemy.Damage(damage);
                 //Destroy(collider.gameObject);
-                Debug.Log("Collision");
+                currentDurability -= durabilityPerHit;
+                Debug.Log(currentDurability);
+                
             }
         }
     }

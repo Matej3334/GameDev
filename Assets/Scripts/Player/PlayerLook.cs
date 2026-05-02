@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 
 public class PlayerLook : MonoBehaviour
 {
-    [SerializeField] private Camera camera;
+    [SerializeField] private new Camera camera;
     [SerializeField] private Transform cameraRoot;
     private float xRotation = 0f;
 
