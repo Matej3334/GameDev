@@ -46,4 +46,9 @@ public class InputManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
+
+    public void OnFootDisable()
+    {
+        onFoot.Disable();
+    }
 }

@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private LayerMask mask;
     private bool DoorOpened = false;
     [SerializeField] private EnemyAttack enemyAttack;
+    private float viewAngle = 90f;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -43,53 +44,59 @@ public class EnemyController : MonoBehaviour
 
         if (distance < lookRadius)
         {
-            NavMeshPath path = new NavMeshPath();
-            NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-            if (agent.enabled)
+            Vector3 directionToPlayer = (target.position - transform.position).normalized;
+            float angleBetween = Vector3.Angle(transform.forward, directionToPlayer);
+            if (angleBetween < viewAngle / 2)
             {
-                agent.isStopped = false;
-                
-                if (distance <= agent.stoppingDistance && !isAttacking)
+                NavMeshPath path = new NavMeshPath();
+                NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+                if (agent.enabled)
                 {
-                    enemyAttack.Attack();
-                    isAttacking = true;
-                    FaceTarget();
-                    EnemyAnim.SetTrigger("attack");
-                    StartCoroutine(AttackCoroutine());
+                    agent.isStopped = false;
 
-                }
-                else if (path.status == NavMeshPathStatus.PathPartial)
-                {
-                    agent.SetPath(path);
-                    Ray ray = new Ray(transform.position, transform.forward);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 4f, mask))
+                    if (distance <= agent.stoppingDistance && !isAttacking)
                     {
-                        if (hit.collider.GetComponent<Interact>() != null &&  !DoorOpened)
+                        enemyAttack.Attack();
+                        isAttacking = true;
+                        FaceTarget();
+                        EnemyAnim.SetTrigger("attack");
+                        StartCoroutine(AttackCoroutine());
+
+                    }
+                    else if (path.status == NavMeshPathStatus.PathPartial)
+                    {
+                        agent.SetPath(path);
+                        Ray ray = new Ray(transform.position, transform.forward);
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit, 4f, mask))
                         {
-                            //agent.SetDestination(hit.collider.transform.position)
+                            if (hit.collider.GetComponent<Interact>() != null && !DoorOpened)
+                            {
+                                //agent.SetDestination(hit.collider.transform.position)
 
-                            Interact interactable = hit.collider.GetComponent<Interact>();
-                            interactable.BaseInteract();
-                            DoorOpened = true;
+                                Interact interactable = hit.collider.GetComponent<Interact>();
+                                interactable.BaseInteract();
+                                DoorOpened = true;
 
+                            }
                         }
                     }
-                }
-                else if (!isAttacking)
-                {
-                    DoorOpened=false;
-                    NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-                    agent.SetPath(path);
-                    EnemyAnim.SetBool("walk", true);
+                    else if (!isAttacking)
+                    {
+                        DoorOpened = false;
+                        NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+                        agent.SetPath(path);
+                        EnemyAnim.SetBool("walk", true);
+                    }
                 }
             }
-        }
-        else
-        {
-            if(agent.enabled){
-                agent.isStopped = true;
-                EnemyAnim.SetBool("walk", false);
+            else
+            {
+                if (agent.enabled)
+                {
+                    agent.isStopped = true;
+                    EnemyAnim.SetBool("walk", false);
+                }
             }
         }
     }

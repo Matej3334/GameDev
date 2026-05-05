@@ -192,6 +192,7 @@ public class PlayerMovementManager : MonoBehaviour
             animator.SetBool("Crouch", true);
             characterController.center = new Vector3(0, 0.6f, 0);
             characterController.height = 1.2f;
+            characterController.radius = 0.7f;
         }
         else
         {
@@ -199,6 +200,7 @@ public class PlayerMovementManager : MonoBehaviour
             animator.SetBool("Crouch", false);
             characterController.height = 2f;
             characterController.center = new Vector3(0, 1f, 0);
+            characterController.radius = 0.4f;
         }
     }
 
