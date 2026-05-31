@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private LayerMask mask;
     private bool DoorOpened = false;
     [SerializeField] private EnemyAttack enemyAttack;
-    private float viewAngle = 90f;
+    private float viewAngle = 360f;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();

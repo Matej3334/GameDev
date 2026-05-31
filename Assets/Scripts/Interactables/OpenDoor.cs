@@ -3,6 +3,7 @@ using UnityEngine;
 public class OpenDoor : Interact
 {
     private Animator animator;
+    [SerializeField] private bool canOpen;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,17 +18,28 @@ public class OpenDoor : Interact
 
     protected override void Interacts()
     {
-        base.Interacts();
-        Debug.Log("interact");
-        if (!animator.GetBool("Opened"))
+        if (canOpen)
         {
-            animator.Play("Open");
-            animator.SetBool("Opened", true);
-        }
-        else
+            base.Interacts();
+            Debug.Log("interact");
+            if (!animator.GetBool("Opened"))
+            {
+                animator.Play("Open");
+                animator.SetBool("Opened", true);
+            }
+            else
+            {
+                animator.SetBool("Opened", false);
+                animator.Play("Close");
+            }
+        } else
         {
-            animator.SetBool("Opened", false);
-            animator.Play("Close");
+            Debug.Log("Can't Open");
         }
+    }
+
+    public void SetKey()
+    {
+        canOpen = true;
     }
 }
