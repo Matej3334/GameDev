@@ -2,7 +2,7 @@
 - Project name: GameDev
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: Cube (1)
-  - Tag: Untagged
+  - Name: Player
+  - Tag: Player
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

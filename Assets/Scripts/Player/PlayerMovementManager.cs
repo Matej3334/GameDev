@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -41,6 +42,12 @@ public class PlayerMovementManager : MonoBehaviour
     private WeaponAttack weaponAttack = null;
     private int WeaponDurability;
 
+    [SerializeField] public AudioClip attackClip;
+    [SerializeField] public AudioClip footstepClip;
+    private AudioSource audioSource;
+    private float footstepTimer;
+    private float footstepPause = 0.6f; 
+
     void Awake()
     {
         player = gameObject;
@@ -57,6 +64,7 @@ public class PlayerMovementManager : MonoBehaviour
         staminaController = GetComponent<StaminaController>();
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
     }
     
 
@@ -80,6 +88,29 @@ public class PlayerMovementManager : MonoBehaviour
             characterController.Move(transform.TransformDirection(currentDirection) * Time.deltaTime);
             playerVelocity.y += gravity * Time.deltaTime;
 
+            if (isGrounded && !isCrouched && (currentDirection.magnitude > 2.5f))
+            {
+                footstepTimer -= Time.deltaTime;
+                if (footstepTimer < 0)
+                {
+                    audioSource.PlayOneShot(footstepClip);
+                    audioSource.pitch = 1.5f;
+                    if (isRunning)
+                    {
+                        footstepTimer = footstepPause * 0.6f;
+                    }
+                    else
+                    {
+                        footstepTimer = footstepPause;
+                    }
+                }
+            }
+            else
+            {
+                footstepTimer = 0;
+            }
+
+
             if (isGrounded && playerVelocity.y < 0)
             {
                 playerVelocity.y = -2f;
@@ -98,6 +129,7 @@ public class PlayerMovementManager : MonoBehaviour
             animator.SetFloat("XVel", 0);
             animator.SetFloat("YVel", 0);
         }
+
         if (JumpCooldown > 0)
         {
             JumpCooldown -= 5.0f * Time.deltaTime;
@@ -107,7 +139,7 @@ public class PlayerMovementManager : MonoBehaviour
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        
+
         if (!isGrounded)
         {
             playerVelocity.y += gravity * Time.deltaTime;
@@ -149,6 +181,7 @@ public class PlayerMovementManager : MonoBehaviour
         characterController.height = 2f;
     }
 
+
     public void StartRun()
     {
         if (isGrounded && staminaController.CanRun() && !isCrouched) 
@@ -177,6 +210,8 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else {
                 animator.SetTrigger("Attack");
+                audioSource.PlayOneShot(attackClip);
+                audioSource.pitch = 1f;
                 staminaController.SetAttack();
                 canAttack = false;
                 noMove = 1.5f;

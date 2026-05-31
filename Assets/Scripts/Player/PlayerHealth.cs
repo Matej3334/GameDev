@@ -14,12 +14,16 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private CanvasGroup DeathScreen;
     private bool GameDone = false;
 
+    [SerializeField] public AudioClip deathClip;
+    private AudioSource audioSource;
+
     void Start()
     {
         inputManager = GetComponent<InputManager>();
         playerAnimator = GetComponent<Animator>();
         currentHP = MaxHP;
         DeathScreen.alpha= 0f;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -43,6 +47,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void GameOver()
     {
+        audioSource.PlayOneShot(deathClip);
         inputManager.OnFootDisable();
         playerAnimator.SetTrigger("Death");
         StartCoroutine(DeathCouroutine());
