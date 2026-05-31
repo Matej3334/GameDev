@@ -3,10 +3,12 @@ using UnityEngine;
 public class Item : Interact
 {
     [SerializeField] private OpenDoor door;
+    [SerializeField] private AudioClip clip;
+    private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -22,7 +24,13 @@ public class Item : Interact
         {
             door.SetKey();
         }
+        audioSource.PlayOneShot(clip);
 
-        Destroy(gameObject);
+        foreach (var renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = false;
+        }
+
+        //Destroy(gameObject);
     }
 }

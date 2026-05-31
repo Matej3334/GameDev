@@ -20,10 +20,14 @@ public class StaminaController : MonoBehaviour
     private bool Attack = false;
     private bool Action = false;
     private float regenerationTimer = 0f;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip breathing;
+    private float breathingTimer = 3.0f;
 
     void Start()
     {
         playerStamina = maxStamina;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -68,6 +72,13 @@ public class StaminaController : MonoBehaviour
         if (isRunning && playerStamina <= 0)
         {
             isRunning = false;
+        }
+
+        breathingTimer-= Time.deltaTime;
+        if (playerStamina <= 30 && breathingTimer < 0)
+        {
+            breathingTimer = 3.0f;
+            audioSource.PlayOneShot(breathing);
         }
     }
 

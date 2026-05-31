@@ -88,13 +88,21 @@ public class PlayerMovementManager : MonoBehaviour
             characterController.Move(transform.TransformDirection(currentDirection) * Time.deltaTime);
             playerVelocity.y += gravity * Time.deltaTime;
 
-            if (isGrounded && !isCrouched && (currentDirection.magnitude > 2.5f))
+            if (isGrounded && (currentDirection.magnitude > 2.5f))
             {
                 footstepTimer -= Time.deltaTime;
                 if (footstepTimer < 0)
                 {
                     audioSource.PlayOneShot(footstepClip);
                     audioSource.pitch = 1.5f;
+                    if (isCrouched)
+                    {
+                        audioSource.volume = 0.25f;
+                    }
+                    else
+                    {
+                        audioSource.volume = 0.5f;
+                    }
                     if (isRunning)
                     {
                         footstepTimer = footstepPause * 0.6f;
