@@ -9,6 +9,8 @@ public class EnemyHealth : MonoBehaviour
     private Animator EnemyAnim;
     private NavMeshAgent agent;
     private Rigidbody rb;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip takeDamage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,6 +18,7 @@ public class EnemyHealth : MonoBehaviour
         EnemyAnim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class EnemyHealth : MonoBehaviour
         currentHP -= damage;
         if (currentHP <= 0)
         {
+            audioSource.PlayOneShot(takeDamage);
             EnemyAnim.SetTrigger("Dead");
             agent.isStopped = true;
             agent.enabled = false;
@@ -37,6 +41,7 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
+            audioSource.PlayOneShot(takeDamage);
             EnemyAnim.SetTrigger("takeDmg");
             EnemyAnim.SetBool("walk", false);
         }

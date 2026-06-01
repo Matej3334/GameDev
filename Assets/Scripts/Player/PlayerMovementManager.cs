@@ -97,11 +97,11 @@ public class PlayerMovementManager : MonoBehaviour
                     audioSource.pitch = 1.5f;
                     if (isCrouched)
                     {
-                        audioSource.volume = 0.25f;
+                        audioSource.volume = 0.2f;
                     }
                     else
                     {
-                        audioSource.volume = 0.5f;
+                        audioSource.volume = 0.4f;
                     }
                     if (isRunning)
                     {

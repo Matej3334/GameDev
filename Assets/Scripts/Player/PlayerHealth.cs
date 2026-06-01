@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
@@ -15,6 +16,7 @@ public class PlayerHealth : MonoBehaviour
     private bool GameDone = false;
 
     [SerializeField] public AudioClip deathClip;
+    [SerializeField] public AudioClip takeDamageClip;
     private AudioSource audioSource;
 
     void Start()
@@ -36,8 +38,13 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        currentHP -= damage;
-        Debug.Log(currentHP + " - Current HP");
+        if (!GameDone)
+        {
+            audioSource.PlayOneShot(takeDamageClip);
+            audioSource.pitch = 1f;
+            currentHP -= damage;
+            Debug.Log(currentHP + " - Current HP");
+        }
         if (currentHP <= 0 && !GameDone)
         {
             GameDone = true;
@@ -47,7 +54,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void GameOver()
     {
-        audioSource.PlayOneShot(deathClip);
         inputManager.OnFootDisable();
         playerAnimator.SetTrigger("Death");
         StartCoroutine(DeathCouroutine());
@@ -70,6 +76,7 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator FreezeTime()
     {
+        audioSource.PlayOneShot(deathClip);
         yield return new WaitForSeconds(3f);
         Time.timeScale = 0;
     }
