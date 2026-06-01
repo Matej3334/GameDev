@@ -4,10 +4,12 @@ public class OpenDoor : Interact
 {
     private Animator animator;
     [SerializeField] private bool canOpen;
+    private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animator = gameObject.GetComponent<Animator>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -22,6 +24,7 @@ public class OpenDoor : Interact
         {
             base.Interacts();
             Debug.Log("interact");
+            audioSource.Play();
             if (!animator.GetBool("Opened"))
             {
                 animator.Play("Open");

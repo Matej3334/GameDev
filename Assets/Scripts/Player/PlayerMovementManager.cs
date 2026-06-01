@@ -88,7 +88,7 @@ public class PlayerMovementManager : MonoBehaviour
             characterController.Move(transform.TransformDirection(currentDirection) * Time.deltaTime);
             playerVelocity.y += gravity * Time.deltaTime;
 
-            if (isGrounded && (currentDirection.magnitude > 2.5f))
+            if (isGrounded && (currentDirection.magnitude > 2f))
             {
                 footstepTimer -= Time.deltaTime;
                 if (footstepTimer < 0)

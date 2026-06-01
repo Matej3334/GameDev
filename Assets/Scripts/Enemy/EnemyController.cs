@@ -16,11 +16,17 @@ public class EnemyController : MonoBehaviour
     private bool DoorOpened = false;
     [SerializeField] private EnemyAttack enemyAttack;
     private float viewAngle = 360f;
+    private float gruntTimer = 0f;
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip gruntClip;
+    [SerializeField] private AudioClip walkingClip;
+    [SerializeField] private AudioClip attackingClip;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         EnemyAnim = GetComponent<Animator>();
-
+        audioSource = GetComponent<AudioSource>();
 
         if (agent == null)
         {
@@ -53,6 +59,16 @@ public class EnemyController : MonoBehaviour
                 if (agent.enabled)
                 {
                     agent.isStopped = false;
+                    
+                    if (gruntTimer <= 0)
+                    {
+                        gruntTimer = 5.0f;
+                        audioSource.PlayOneShot(gruntClip);
+                    }
+                    else
+                    {
+                        gruntTimer -= Time.deltaTime;
+                    }
 
                     if (distance <= agent.stoppingDistance && !isAttacking)
                     {
@@ -99,6 +115,10 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            EnemyAnim.SetBool("walk", false);
+        }
     }
 
     void FaceTarget()
@@ -126,5 +146,15 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         isAttacking = false;
+    }
+
+    public void WalkSound()
+    {
+        audioSource.PlayOneShot(walkingClip);
+    }
+
+    public void AttackSound()
+    {
+        audioSource.PlayOneShot(attackingClip);
     }
 }
