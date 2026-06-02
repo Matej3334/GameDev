@@ -11,12 +11,6 @@ public class Item : Interact
         audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     protected override void Interacts()
     {
         base.Interacts();

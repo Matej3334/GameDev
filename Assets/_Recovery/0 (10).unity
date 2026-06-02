@@ -4880,7 +4880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1866944771634362050, guid: f1546e5248953c446985d165a7136637, type: 3}
       propertyPath: durabilityPerHit
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3101905485592984188, guid: f1546e5248953c446985d165a7136637, type: 3}
       propertyPath: playerMovementManager
@@ -4899,18 +4899,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 143530130161168099, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
-      propertyPath: m_Size.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 143530130161168099, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
-      propertyPath: m_Size.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 143530130161168099, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
-      propertyPath: m_Center.y
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 2313573480692786923, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
       propertyPath: WinScreen
       value: 
@@ -4954,14 +4942,6 @@ PrefabInstance:
     - target: {fileID: 4335226015295486793, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5755253452121658313, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -27.033
-      objectReference: {fileID: 0}
-    - target: {fileID: 5755253452121658313, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 56.476
       objectReference: {fileID: 0}
     - target: {fileID: 9221132606158996004, guid: 30bd9a91587c8c14499056162b231fd4, type: 3}
       propertyPath: m_Name

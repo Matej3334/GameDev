@@ -22,7 +22,7 @@ public class PlayerInteract : MonoBehaviour
         playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(currentCamera.transform.position, currentCamera.transform.forward);
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit, distance, mask))
+        if (Physics.Raycast(ray, out hit, distance, mask))
         {
             if (hit.collider.GetComponent<Interact>() != null)
             {
@@ -34,6 +34,6 @@ public class PlayerInteract : MonoBehaviour
                 }
             }
         }
-        
+
     }
 }

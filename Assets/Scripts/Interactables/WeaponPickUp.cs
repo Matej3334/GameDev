@@ -12,12 +12,6 @@ public class WeaponPickUp : Interact
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     protected override void Interacts()
     {
         base.Interacts();

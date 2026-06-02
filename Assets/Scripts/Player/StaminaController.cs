@@ -23,7 +23,8 @@ public class StaminaController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip breathing;
     private float breathingTimer = 3.0f;
-
+    private bool isRegenerating = false;
+    private bool isBreathing = false;
     void Start()
     {
         playerStamina = maxStamina;
@@ -33,7 +34,7 @@ public class StaminaController : MonoBehaviour
     void Update()
     {
 
-        if(isRunning && playerStamina > 0)
+        if (isRunning && playerStamina > 0)
         {
             playerStamina -= runDrain * Time.deltaTime;
             regenerationTimer = 0f;
@@ -44,12 +45,13 @@ public class StaminaController : MonoBehaviour
                 isRunning = false;
             }
         }
-        else if(!isRunning && (playerStamina <= maxStamina - 0.01)){
+        else if (!isRunning && (playerStamina <= maxStamina))
+        {
             if (!Action)
             {
                 updateStamina();
             }
-            else
+            else if (!isRegenerating)
             {
                 StartCoroutine(ActionCoroutine());
             }
@@ -63,7 +65,8 @@ public class StaminaController : MonoBehaviour
             Jump = false;
         }
 
-        else if(Attack){
+        else if (Attack)
+        {
 
             playerStamina -= attackCost;
             Attack = false;
@@ -74,18 +77,24 @@ public class StaminaController : MonoBehaviour
             isRunning = false;
         }
 
-        breathingTimer-= Time.deltaTime;
-        if (playerStamina <= 30 && breathingTimer < 0)
+        breathingTimer -= Time.deltaTime;
+        if (playerStamina <= 30 && breathingTimer < 0 && !isBreathing)
         {
-            breathingTimer = 3.0f;
+            breathingTimer = 5.0f;
             audioSource.PlayOneShot(breathing);
+        }
+        else if (breathingTimer <= 0)
+        {
+            isBreathing = false;
         }
     }
 
     IEnumerator ActionCoroutine()
     {
+        isRegenerating = true;
         yield return new WaitForSeconds(0.8f);
         Action = false;
+        isRegenerating = false;
 
     }
     private void updateStamina()
@@ -94,7 +103,10 @@ public class StaminaController : MonoBehaviour
         
         if(regenerationTimer >= regenDelay)
         {
-            playerStamina += staminaRegen * Time.deltaTime;
+            float staminaToAdd = staminaRegen * Time.deltaTime;
+            playerStamina = Mathf.Min(maxStamina, playerStamina + staminaToAdd);
+
+            regenerationTimer = regenDelay;
         }
     }
 

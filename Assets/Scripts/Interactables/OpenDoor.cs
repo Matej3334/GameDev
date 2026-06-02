@@ -12,11 +12,6 @@ public class OpenDoor : Interact
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     protected override void Interacts()
     {

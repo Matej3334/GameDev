@@ -23,12 +23,15 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AudioClip walkingClip;
     [SerializeField] private AudioClip attackingClip;
     private bool pathSet=false;
+    private Ray ray;
+    private NavMeshPath path;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         EnemyAnim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-
+        
+        path = new NavMeshPath();
         filter = new NavMeshQueryFilter();
         filter.agentTypeID = agent.agentTypeID;
         filter.areaMask = agent.areaMask;
@@ -60,13 +63,12 @@ public class EnemyController : MonoBehaviour
 
             if (angleBetween < viewAngle / 2)
             {
-                NavMeshPath path = new NavMeshPath();
                 bool calculated = NavMesh.CalculatePath(transform.position, target.position, filter, path);
 
                 if (agent.enabled)
                 {
                     agent.isStopped = false;
-                    
+
                     if (gruntTimer <= 0)
                     {
                         gruntTimer = 10.0f;
@@ -91,16 +93,20 @@ public class EnemyController : MonoBehaviour
                         DoorOpened = false;
                         agent.SetPath(path);
                         EnemyAnim.SetBool("walk", true);
+                        pathSet = false;
                     }
                     else if (path.status == NavMeshPathStatus.PathPartial && calculated)
                     {
-                        if(!pathSet)
+                        if (!pathSet)
                         {
                             agent.SetPath(path);
                             pathSet = true;
                         }
-                        Ray ray = new Ray(transform.position, transform.forward);
+
+                        ray.origin = transform.position;
+                        ray.direction = transform.forward;
                         RaycastHit hit;
+
                         if (Physics.Raycast(ray, out hit, 4f, mask))
                         {
                             if (hit.collider.GetComponent<Interact>() != null && !DoorOpened)
@@ -133,7 +139,10 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            agent.ResetPath();
+            if (agent.enabled)
+            {
+                agent.ResetPath();
+            }
             EnemyAnim.SetBool("walk", false);
         }
     }

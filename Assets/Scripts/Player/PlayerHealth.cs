@@ -19,6 +19,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] public AudioClip takeDamageClip;
     private AudioSource audioSource;
     private float transparency;
+    private float lastTransparency= 1f;
 
     void Start()
     {
@@ -27,14 +28,23 @@ public class PlayerHealth : MonoBehaviour
         currentHP = MaxHP;
         DeathScreen.alpha= 0f;
         audioSource = GetComponent<AudioSource>();
+
+        transparency = 1f;
+        Color imageColor = Color.white;
+        imageColor.a = transparency;
+        HealthColor.color = imageColor;
     }
 
     void Update()
     {
         transparency = 1f - (currentHP/100f);
-        Color imageColor = Color.white;
-        imageColor.a = transparency;
-        HealthColor.color = imageColor;
+        if (Mathf.Abs(lastTransparency - transparency) > 0.01f)
+        {
+            lastTransparency = transparency;
+            Color imageColor = Color.white;
+            imageColor.a = transparency;
+            HealthColor.color = imageColor;
+        }
     }
 
     public void TakeDamage(float damage)

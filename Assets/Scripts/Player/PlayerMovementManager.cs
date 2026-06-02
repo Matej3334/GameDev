@@ -9,8 +9,6 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] private float AnimationBlendSpeed = 0.2f;
     private CharacterController characterController;
     private StaminaController staminaController;
-    private RaycastHit groundHit;
-    private Ray groundRay;
 
     private Vector3 playerVelocity;
     private Vector3 currentDirection = Vector3.zero;
@@ -43,8 +41,7 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] public AudioClip attackClip;
     [SerializeField] public AudioClip footstepClip;
     private AudioSource audioSource;
-    private float footstepTimer;
-    private float footstepPause = 0.6f; 
+    private float footStepTimer = 0f;
 
     void Awake()
     {
@@ -88,44 +85,30 @@ public class PlayerMovementManager : MonoBehaviour
 
             if (isGrounded && (currentDirection.magnitude > 2f))
             {
-                footstepTimer -= Time.deltaTime;
-                if (footstepTimer < 0)
+                footStepTimer -= Time.deltaTime;
+                if (footStepTimer < 0)
                 {
-                    audioSource.PlayOneShot(footstepClip);
-                    audioSource.pitch = 1.5f;
-                    if (isCrouched)
+                    FootstepEvent();
+                    if (!isRunning)
                     {
-                        audioSource.volume = 0.2f;
+                        footStepTimer = 0.6f;
                     }
                     else
                     {
-                        audioSource.volume = 0.4f;
-                    }
-                    if (isRunning)
-                    {
-                        footstepTimer = footstepPause * 0.6f;
-                    }
-                    else
-                    {
-                        footstepTimer = footstepPause;
+                        footStepTimer = 0.35f;
                     }
                 }
             }
-            else
-            {
-                footstepTimer = 0;
-            }
-
 
             if (isGrounded && playerVelocity.y < 0)
             {
                 playerVelocity.y = -2f;
             }
 
-            
-             animator.SetFloat("XVel", currentDirection.x);
-             animator.SetFloat("YVel", currentDirection.z);
-            
+
+            animator.SetFloat("XVel", currentDirection.x);
+            animator.SetFloat("YVel", currentDirection.z);
+
 
             characterController.Move(playerVelocity * Time.deltaTime);
         }
@@ -144,9 +127,7 @@ public class PlayerMovementManager : MonoBehaviour
 
     void Update()
     {
-        groundRay.origin = groundCheck.position;
-        groundRay.direction = -transform.up;
-        isGrounded = Physics.Raycast(groundRay, out groundHit, groundDistance + 0.1f, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (!isGrounded)
         {
@@ -154,7 +135,7 @@ public class PlayerMovementManager : MonoBehaviour
         }
         else if (playerVelocity.y < 0)
         {
-            if (animator.GetBool("Jump")==true)
+            if (animator.GetBool("Jump") == true)
             {
                 animator.SetBool("Jump", false);
             }
@@ -258,4 +239,18 @@ public class PlayerMovementManager : MonoBehaviour
         weaponAttack = currentWeapon.GetComponent<WeaponAttack>();
     }
 
+    public void FootstepEvent() 
+    {
+        audioSource.pitch = 1.5f;
+        if (isCrouched)
+        {
+            audioSource.volume = 0.2f;
+        }
+        else
+        {
+            audioSource.volume = 0.4f;
+        }
+
+        audioSource.PlayOneShot(footstepClip);
+    }
 }

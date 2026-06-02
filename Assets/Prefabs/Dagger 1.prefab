@@ -106,9 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c3406e1c0983141a2f74824181f864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponAttack
-  damage: 20
-  durabilityPerHit: 30
-  maxdDurability: 100
+  damage: 100
+  durabilityPerHit: 50
+  maxDurability: 100
 --- !u!65 &4567729800726215307
 BoxCollider:
   m_ObjectHideFlags: 0

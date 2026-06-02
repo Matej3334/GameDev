@@ -8,11 +8,13 @@ public class WinScript : MonoBehaviour
 {
     [SerializeField] private CanvasGroup WinScreen;
     private AudioSource audioSource;
+    private BoxCollider boxCollider;
 
     void Start()
     {
         WinScreen.alpha = 0f;
         audioSource = GetComponent<AudioSource>();
+        boxCollider = GetComponent<BoxCollider>();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -29,6 +31,7 @@ public class WinScript : MonoBehaviour
     IEnumerator WinCouroutine()
     {
         float elapsed = 0;
+        boxCollider.enabled = false;
         while (elapsed < 2f)
         {
             elapsed += Time.deltaTime;

@@ -21,12 +21,6 @@ public class EnemyHealth : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Damage(int damage)
     {
         currentHP -= damage;

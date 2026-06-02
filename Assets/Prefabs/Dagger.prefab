@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponAttack
   damage: 100
-  durabilityPerHit: 20
+  durabilityPerHit: 50
   maxDurability: 100
 --- !u!65 &2120420366514555223
 BoxCollider:
