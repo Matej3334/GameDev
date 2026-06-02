@@ -11,12 +11,6 @@ public class Scream : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         Collider otherCollider = other.GetComponent<Collider>();

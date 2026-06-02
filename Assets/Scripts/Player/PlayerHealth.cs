@@ -18,6 +18,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] public AudioClip deathClip;
     [SerializeField] public AudioClip takeDamageClip;
     private AudioSource audioSource;
+    private float transparency;
 
     void Start()
     {
@@ -30,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        float transparency = 1f - (currentHP/100f);
+        transparency = 1f - (currentHP/100f);
         Color imageColor = Color.white;
         imageColor.a = transparency;
         HealthColor.color = imageColor;

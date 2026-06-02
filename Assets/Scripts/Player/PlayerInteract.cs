@@ -7,18 +7,18 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] private LayerMask mask;
     private PlayerUI playerUI;
     private InputManager inputManager;
+    private Camera currentCamera;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerUI = GetComponent<PlayerUI>();
         inputManager = GetComponent<InputManager>();
+        currentCamera = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        Camera currentCamera = Camera.main;
         playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(currentCamera.transform.position, currentCamera.transform.forward);
         RaycastHit hit;

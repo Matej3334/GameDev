@@ -17,12 +17,6 @@ public class WeaponAttack : MonoBehaviour
         currentDurability = maxDurability;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public int Attack()
     {
         Debug.Log("Attacking");

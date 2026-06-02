@@ -22,6 +22,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AudioClip gruntClip;
     [SerializeField] private AudioClip walkingClip;
     [SerializeField] private AudioClip attackingClip;
+    private bool pathSet=false;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -93,7 +94,11 @@ public class EnemyController : MonoBehaviour
                     }
                     else if (path.status == NavMeshPathStatus.PathPartial && calculated)
                     {
-                        agent.SetPath(path);
+                        if(!pathSet)
+                        {
+                            agent.SetPath(path);
+                            pathSet = true;
+                        }
                         Ray ray = new Ray(transform.position, transform.forward);
                         RaycastHit hit;
                         if (Physics.Raycast(ray, out hit, 4f, mask))
@@ -105,7 +110,7 @@ public class EnemyController : MonoBehaviour
                                 Interact interactable = hit.collider.GetComponent<Interact>();
                                 interactable.BaseInteract();
                                 DoorOpened = true;
-
+                                pathSet = false;
                             }
                         }
                     }
@@ -122,11 +127,13 @@ public class EnemyController : MonoBehaviour
                 {
                     agent.isStopped = true;
                     EnemyAnim.SetBool("walk", false);
+                    agent.ResetPath();
                 }
             }
         }
         else
         {
+            agent.ResetPath();
             EnemyAnim.SetBool("walk", false);
         }
     }

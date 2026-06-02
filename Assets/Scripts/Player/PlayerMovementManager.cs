@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.ComponentModel.Design;
-using System.Security.Cryptography.X509Certificates;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.XR;
+
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -13,6 +9,8 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] private float AnimationBlendSpeed = 0.2f;
     private CharacterController characterController;
     private StaminaController staminaController;
+    private RaycastHit groundHit;
+    private Ray groundRay;
 
     private Vector3 playerVelocity;
     private Vector3 currentDirection = Vector3.zero;
@@ -146,7 +144,9 @@ public class PlayerMovementManager : MonoBehaviour
 
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        groundRay.origin = groundCheck.position;
+        groundRay.direction = -transform.up;
+        isGrounded = Physics.Raycast(groundRay, out groundHit, groundDistance + 0.1f, groundMask);
 
         if (!isGrounded)
         {
@@ -206,7 +206,7 @@ public class PlayerMovementManager : MonoBehaviour
     public void Attack()
     {
 
-        if (isGrounded && canAttack && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Attack") && !isCrouched && staminaController.canAttack() && ActiveWeapon != 0)
+        if (isGrounded && canAttack && !isCrouched && staminaController.canAttack() && ActiveWeapon != 0)
         {
             WeaponDurability = weaponAttack.Attack();
             if (WeaponDurability <= 0)
