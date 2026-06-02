@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     private float viewAngle = 360f;
     private float gruntTimer = 0f;
     private AudioSource audioSource;
-
+    private NavMeshQueryFilter filter;
     [SerializeField] private AudioClip gruntClip;
     [SerializeField] private AudioClip walkingClip;
     [SerializeField] private AudioClip attackingClip;
@@ -27,6 +27,10 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         EnemyAnim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+
+        filter = new NavMeshQueryFilter();
+        filter.agentTypeID = agent.agentTypeID;
+        filter.areaMask = agent.areaMask;
 
         if (agent == null)
         {
@@ -52,17 +56,19 @@ public class EnemyController : MonoBehaviour
         {
             Vector3 directionToPlayer = (target.position - transform.position).normalized;
             float angleBetween = Vector3.Angle(transform.forward, directionToPlayer);
+
             if (angleBetween < viewAngle / 2)
             {
                 NavMeshPath path = new NavMeshPath();
-                NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+                bool calculated = NavMesh.CalculatePath(transform.position, target.position, filter, path);
+
                 if (agent.enabled)
                 {
                     agent.isStopped = false;
                     
                     if (gruntTimer <= 0)
                     {
-                        gruntTimer = 5.0f;
+                        gruntTimer = 10.0f;
                         audioSource.PlayOneShot(gruntClip);
                     }
                     else
@@ -79,7 +85,13 @@ public class EnemyController : MonoBehaviour
                         StartCoroutine(AttackCoroutine());
 
                     }
-                    else if (path.status == NavMeshPathStatus.PathPartial)
+                    else if (calculated && path.status == NavMeshPathStatus.PathComplete && !isAttacking)
+                    {
+                        DoorOpened = false;
+                        agent.SetPath(path);
+                        EnemyAnim.SetBool("walk", true);
+                    }
+                    else if (path.status == NavMeshPathStatus.PathPartial && calculated)
                     {
                         agent.SetPath(path);
                         Ray ray = new Ray(transform.position, transform.forward);
@@ -97,13 +109,11 @@ public class EnemyController : MonoBehaviour
                             }
                         }
                     }
-                    else if (!isAttacking)
-                    {
-                        DoorOpened = false;
-                        NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-                        agent.SetPath(path);
-                        EnemyAnim.SetBool("walk", true);
-                    }
+                    //else if (!isAttacking)
+                    //{
+                    //    EnemyAnim.SetBool("walk", false);
+                    //    agent.isStopped = true;
+                    //}
                 }
             }
             else
