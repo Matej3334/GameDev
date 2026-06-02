@@ -2,7 +2,7 @@
 - Project name: GameDev
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: Ceiling4 (53)
+  - Name: Dungeon_Key_Set
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Interactable
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
