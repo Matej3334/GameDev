@@ -41,7 +41,9 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] public AudioClip attackClip;
     [SerializeField] public AudioClip footstepClip;
     private AudioSource audioSource;
-    private float footStepTimer = 0f;
+    //private float footStepTimer = 0f;
+    private float lastFootstepTime = 0f;
+    private float footstepCooldown = 0.2f;
 
     void Awake()
     {
@@ -83,22 +85,22 @@ public class PlayerMovementManager : MonoBehaviour
             characterController.Move(transform.TransformDirection(currentDirection) * Time.deltaTime);
             playerVelocity.y += gravity * Time.deltaTime;
 
-            if (isGrounded && (currentDirection.magnitude > 2f))
-            {
-                footStepTimer -= Time.deltaTime;
-                if (footStepTimer < 0)
-                {
-                    FootstepEvent();
-                    if (!isRunning)
-                    {
-                        footStepTimer = 0.6f;
-                    }
-                    else
-                    {
-                        footStepTimer = 0.35f;
-                    }
-                }
-            }
+            //if (isGrounded && (currentDirection.magnitude > 2f))
+            //{
+            //    footStepTimer -= Time.deltaTime;
+            //    if (footStepTimer < 0)
+            //    {
+            //        FootstepEvent();
+            //        if (!isRunning)
+            //        {
+            //            footStepTimer = 0.6f;
+            //        }
+            //        else
+            //        {
+            //            footStepTimer = 0.35f;
+            //        }
+            //    }
+            //}
 
             if (isGrounded && playerVelocity.y < 0)
             {
@@ -241,16 +243,13 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void FootstepEvent() 
     {
-        audioSource.pitch = 1.5f;
-        if (isCrouched)
-        {
-            audioSource.volume = 0.2f;
-        }
-        else
-        {
-            audioSource.volume = 0.4f;
-        }
+        if (Time.time - lastFootstepTime < footstepCooldown)
+            return;
 
+        lastFootstepTime = Time.time;
+
+        audioSource.pitch = 1f;
+        audioSource.volume = isCrouched ? 0.2f : 0.4f;
         audioSource.PlayOneShot(footstepClip);
     }
 }
