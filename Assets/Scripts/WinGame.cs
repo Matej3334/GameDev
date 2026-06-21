@@ -23,6 +23,7 @@ public class WinScript : MonoBehaviour
         {
             StartCoroutine(WinCouroutine());
             StartCoroutine(FreezeTime());
+            StartCoroutine(Quit());
         }
 
 
@@ -45,5 +46,11 @@ public class WinScript : MonoBehaviour
         audioSource.Play();
         yield return new WaitForSeconds(3f);
         Time.timeScale = 0;
+    }
+
+    IEnumerator Quit()
+    {
+        yield return new WaitForSeconds(2f);
+        Application.Quit();
     }
 }

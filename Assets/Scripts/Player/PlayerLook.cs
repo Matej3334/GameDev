@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class PlayerLook : MonoBehaviour
 {
@@ -16,7 +17,9 @@ public class PlayerLook : MonoBehaviour
         float mouseX = input.x;
         float mouseY = input.y;
 
+
         camera.transform.position = cameraRoot.position;
+
         xRotation -= (mouseY * Time.deltaTime) * ySensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         camera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);

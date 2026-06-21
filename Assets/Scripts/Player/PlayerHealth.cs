@@ -29,10 +29,6 @@ public class PlayerHealth : MonoBehaviour
         DeathScreen.alpha= 0f;
         audioSource = GetComponent<AudioSource>();
 
-        transparency = 1f;
-        Color imageColor = Color.white;
-        imageColor.a = transparency;
-        HealthColor.color = imageColor;
     }
 
     void Update()
@@ -69,6 +65,7 @@ public class PlayerHealth : MonoBehaviour
         playerAnimator.SetTrigger("Death");
         StartCoroutine(DeathCouroutine());
         StartCoroutine(FreezeTime());
+        StartCoroutine(Quit());
     }
     
     IEnumerator DeathCouroutine()
@@ -90,5 +87,10 @@ public class PlayerHealth : MonoBehaviour
         audioSource.PlayOneShot(deathClip);
         yield return new WaitForSeconds(3f);
         Time.timeScale = 0;
+    }
+    IEnumerator Quit()
+    {
+        yield return new WaitForSeconds(2f);
+        Application.Quit();
     }
 }

@@ -21,6 +21,7 @@ public class InputManager : MonoBehaviour
         onFoot.Run.canceled += ctx => manager.StopRun();
         onFoot.Attack.performed += ctx => manager.Attack();
         onFoot.Crouch.performed += ctx => manager.Crouch();
+        
     }
 
     void FixedUpdate()
@@ -50,5 +51,10 @@ public class InputManager : MonoBehaviour
     public void OnFootDisable()
     {
         onFoot.Disable();
+    }
+
+    private void CloseGame()
+    {
+
     }
 }
