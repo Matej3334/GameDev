@@ -43,8 +43,9 @@ public class PlayerMovementManager : MonoBehaviour
     private AudioSource audioSource;
     //private float footStepTimer = 0f;
     private float lastFootstepTime = 0f;
-    private float footstepCooldown = 0.2f;
+    private float footstepCooldown = 0.3f;
 
+    public float PlayerNoiseLevel = 10f;
     void Awake()
     {
         player = gameObject;
@@ -178,11 +179,13 @@ public class PlayerMovementManager : MonoBehaviour
         if (isGrounded && staminaController.CanRun() && !isCrouched) 
         {
             staminaController.SetRun(true);
+            PlayerNoiseLevel = 1.5f;
         }
     }
 
     public void StopRun()
     {
+        PlayerNoiseLevel = 5f;
         staminaController.SetRun(false);
     }
 
@@ -214,6 +217,7 @@ public class PlayerMovementManager : MonoBehaviour
     {
         if (!isCrouched)
         {
+            PlayerNoiseLevel = 2f;
             isCrouched = true;
             animator.SetBool("Crouch", true);
             characterController.center = new Vector3(0, 0.6f, 0);
@@ -222,6 +226,7 @@ public class PlayerMovementManager : MonoBehaviour
         }
         else
         {
+            PlayerNoiseLevel = 5f;
             isCrouched = false;
             animator.SetBool("Crouch", false);
             characterController.height = 2f;

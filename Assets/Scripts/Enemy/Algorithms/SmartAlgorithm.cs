@@ -12,6 +12,7 @@ public class SmartAlgorithm : MonoBehaviour
     private Transform target;
     private NavMeshAgent agent;
     private NavMeshPath path;
+    [SerializeField] private PlayerMovementManager playerManager;
 
     private Animator EnemyAnim;
     private bool isAttacking = false;
@@ -41,6 +42,7 @@ public class SmartAlgorithm : MonoBehaviour
         filter.agentTypeID = agent.agentTypeID;
         filter.areaMask = agent.areaMask;
 
+
         if (PlayerMovementManager.player != null)
         {
             target = PlayerMovementManager.player.transform;
@@ -59,10 +61,15 @@ public class SmartAlgorithm : MonoBehaviour
             if (playerLost)
             {
                 LookingForPlayerTimer -= Time.deltaTime;
-                Debug.Log(LookingForPlayerTimer);
+                if(LookingForPlayerTimer <= 0f)
+                {
+                    playerLost = false;
+                }
             }
+
             if (DetectPlayer() || isChasing)
             {
+                playerLost = false;
                 isChasing = true;
                 MoveToPlayer();
             }
@@ -76,6 +83,8 @@ public class SmartAlgorithm : MonoBehaviour
     private bool DetectPlayer()
     {
         distance = Vector3.Distance(target.position, transform.position);
+        float noiseLevel = playerManager.PlayerNoiseLevel / distance;
+        Debug.Log(noiseLevel);
 
         if (distance < lookRadius)
         {
@@ -90,7 +99,14 @@ public class SmartAlgorithm : MonoBehaviour
                 }
             }
         }
-        return false;
+        
+        if (noiseLevel > 1.5f)
+        {
+            Debug.Log("Noise");
+            return true;
+        }
+        
+         return false;
     }
 
     private void MoveToPlayer()

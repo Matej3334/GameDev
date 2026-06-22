@@ -4140,6 +4140,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 458490054613465157, guid: 95e512bc917fa4b40a749440380b67a3, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458490054613465157, guid: 95e512bc917fa4b40a749440380b67a3, type: 3}
       propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
       value: 1
       objectReference: {fileID: 0}
@@ -4650,6 +4654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43a25137f0c64e44d83ebd820d8f5cd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  playerManager: {fileID: 1210792441}
   enemyAttack: {fileID: 755078064}
 --- !u!1001 &765431842
 PrefabInstance:
@@ -7185,6 +7190,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4355692286540936760, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
+      propertyPath: m_Volume
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355692286540936760, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
+      propertyPath: MaxDistance
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355692286540936760, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4446514213448902564, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
       propertyPath: m_Name
       value: Player 1
@@ -7214,6 +7231,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
+--- !u!114 &1210792441 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2910108952676005703, guid: 3131c985d77f28e4d8e978ac4c018ba3, type: 3}
+  m_PrefabInstance: {fileID: 1210792440}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30e58c5a09a42f48a0afeffe71bd1b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementManager
 --- !u!1001 &1225022051
 PrefabInstance:
   m_ObjectHideFlags: 0
