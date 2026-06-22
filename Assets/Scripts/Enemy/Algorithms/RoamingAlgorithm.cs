@@ -15,6 +15,7 @@ public class RoamingAlgorithm : MonoBehaviour
 
     [SerializeField] private Transform[] waypoints;
     private int currentWaypoint;
+    private float WaypointTimer = 0f;
 
     private float lookRadius = 15f;
     private float viewAngle = 120f;
@@ -23,6 +24,7 @@ public class RoamingAlgorithm : MonoBehaviour
 
     private float xPos;
     private float zPos;
+
     void Start()
     {
         currentWaypoint = 0;
@@ -113,16 +115,23 @@ public class RoamingAlgorithm : MonoBehaviour
         
         if (xPos + zPos < 5f)
         {
-            if (currentWaypoint == waypoints.Length - 1)
+            EnemyAnim.SetBool("walk", false);
+            WaypointTimer += Time.deltaTime;
+            if (WaypointTimer > 2)
             {
-                currentWaypoint = 0;
+                if (currentWaypoint == waypoints.Length - 1)
+                {
+                    currentWaypoint = 0;
+                }
+                else
+                {
+                    currentWaypoint++;
+                }
+                WaypointTimer = 0;
+                WaypointSet = false;
             }
-            else
-            {
-                currentWaypoint++;
-            }
-            WaypointSet = false;
         }
+
         if (!WaypointSet)
         {
             NavMesh.CalculatePath(transform.position, waypoints[currentWaypoint].position, filter, path);
