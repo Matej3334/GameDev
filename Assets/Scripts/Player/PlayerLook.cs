@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class PlayerLook : MonoBehaviour
 {
-    [SerializeField] private new Camera camera;
+    [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraRoot;
     private float xRotation = 0f;
 

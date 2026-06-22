@@ -7,7 +7,7 @@ public class WeaponAttack : MonoBehaviour
     [SerializeField] int damage = 50;
     [SerializeField] int durabilityPerHit = 100;
     [SerializeField] int maxDurability = 100;
-    private new BoxCollider collider;
+    private BoxCollider collider;
     private int currentDurability;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

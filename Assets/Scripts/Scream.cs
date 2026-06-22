@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Scream : MonoBehaviour
 {
-    new AudioSource audio;
+    AudioSource audio;
     BoxCollider boxCollider;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
