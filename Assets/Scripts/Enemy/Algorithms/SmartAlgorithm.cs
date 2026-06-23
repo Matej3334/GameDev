@@ -163,7 +163,7 @@ public class SmartAlgorithm : MonoBehaviour
             
             NavMeshHit hit;
 
-            if(NavMesh.SamplePosition(random, out hit, 1.5f, filter))
+            if(NavMesh.SamplePosition(random, out hit, 2f, filter))
             {
                 Waypoint = hit.position;
                 WaypointSet = true;

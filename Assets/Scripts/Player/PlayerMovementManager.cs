@@ -179,13 +179,13 @@ public class PlayerMovementManager : MonoBehaviour
         if (isGrounded && staminaController.CanRun() && !isCrouched) 
         {
             staminaController.SetRun(true);
-            PlayerNoiseLevel = 1.5f;
+            PlayerNoiseLevel = 20f;
         }
     }
 
     public void StopRun()
     {
-        PlayerNoiseLevel = 5f;
+        PlayerNoiseLevel = 10f;
         staminaController.SetRun(false);
     }
 
