@@ -53,8 +53,4 @@ public class InputManager : MonoBehaviour
         onFoot.Disable();
     }
 
-    private void CloseGame()
-    {
-
-    }
 }

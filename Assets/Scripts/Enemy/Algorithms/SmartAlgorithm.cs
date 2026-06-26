@@ -84,7 +84,6 @@ public class SmartAlgorithm : MonoBehaviour
     {
         distance = Vector3.Distance(target.position, transform.position);
         float noiseLevel = playerManager.PlayerNoiseLevel / distance;
-        Debug.Log(noiseLevel);
 
         if (distance < lookRadius)
         {
